@@ -1,5 +1,5 @@
-from Load_Data import *
-from Load_Variables import *
+from _Load_Data import *
+from _Load_Variables import *
 import configparser
 
 def setNameOdds():
