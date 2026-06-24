@@ -127,7 +127,7 @@ def setNameOdds():
                              "last_hyphen_percentage" : last_hyphen_percentage,
                              "suffix_percentage" : suffix_percentage}
     config["Names"] = {"first_count" : first_count, "last_count" : last_count, "suffix_count" : suffix_count}
-    with open("C:/Users/pensh/Desktop/VSCode/DataBase/_Draft_CFG_Maker/Data/names.cfg", "w", encoding = "utf-8") as configfile:
+    with open("C:/Users/pensh/Desktop/VSCode/DataBase/_Draft_CFG_Maker/Data/player_names.cfg", "w", encoding = "utf-8") as configfile:
         config.write(configfile)
 
 setNameOdds()   
