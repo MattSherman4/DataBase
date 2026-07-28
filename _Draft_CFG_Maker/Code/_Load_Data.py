@@ -84,14 +84,20 @@ def load_draft_history(stats = False):
     return sports_ref
 
 # Loads all players in draft/Beast databases
-def load_draft_all(clean_names = True):
+def load_draft_all(clean_names = True, include_div = True, include_conf = True):
     # Load data
     sf = load_draft_history()
-    beast = load_beast()[['Year', 'Name', 'POS', 'College', 'Grade']]
-    #TODO: Find a way to drop 'Grade'? 
+    beast = load_beast()
+    cols_to_keep = ['Year', 'Name', 'POS', 'College', 'Grade']
+    if include_div:
+        cols_to_keep.append('Division')
+    if include_conf:
+        cols_to_keep.append('Conference')
+    beast = beast[cols_to_keep]
 
     # Merge Data
     df = sf.merge(beast, how = 'outer', on = ['Year', 'Name', 'POS', 'College'])
+    df = merge_and_remove_x_y_cols(df)
     
     # Remove "  HOF" from names
     if clean_names:
@@ -225,10 +231,10 @@ def max_no_one(i):
 # Remove and merges duplicate columns
 def merge_and_remove_x_y_cols(df):
     cols = [str(s) for s in df.columns.tolist()]
-    x = [str(x) for x in cols if x[-2:] == '_x']
-    y = [str(y) for y in cols if y[-2:] == '_y']
+    x = sorted([str(x) for x in cols if x[-2:] == '_x'])
+    y = sorted([str(y) for y in cols if y[-2:] == '_y'])
     base = [base[:-2] for base in x]
-
+    
     for i in range(0, len(base)):
         df = df.rename(columns = {x[i] : base[i]})
         df[base[i]] = df[base[i]].fillna(df[y[i]])
