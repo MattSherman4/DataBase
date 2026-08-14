@@ -40,6 +40,7 @@ for position in history_draft['POS'].unique():
     # Get FA rounds frequencies
     #TODO: Get actual UDFA Data?
     history_draft_data_FA = history_draft[history_draft['Grade'] == 'FA']
+    history_draft_data_FA = history_draft_data_FA[history_draft_data_FA['Division'] != 'DNP']
     if len(history_draft_data_FA):
         FA_freq = add_missing_divisions((history_draft_data_FA['Division'].value_counts(normalize = True)).to_dict())
     else:
@@ -47,6 +48,7 @@ for position in history_draft['POS'].unique():
 
     # Get RMC rounds frequencies
     history_draft_data_RMC = history_draft[history_draft['Grade'] == 'RMC']
+    history_draft_data_RMC = history_draft_data_RMC[history_draft_data_RMC['Division'] != 'DNP']
     if len(history_draft_data_RMC):    
         RMC_freq = add_missing_divisions((history_draft_data_RMC['Division'].value_counts(normalize = True)).to_dict())
     else:
@@ -62,5 +64,5 @@ for position in history_draft['POS'].unique():
                                 "bot_freq" : bot_freq,
                                 "FA_freq" : FA_freq,
                                 "RMC_freq" : RMC_freq}
-with open("C:/Users/pensh/Desktop/VSCode/DataBase/_Draft_CFG_Maker/Data/CollegeOddsByPosition.cfg", "w", encoding = "utf-8") as configfile:
+with open("C:/Users/pensh/Desktop/VSCode/DataBase/_Draft_CFG_Maker/Data/CollegeOddsByPosition.cfg", "w+", encoding = "utf-8") as configfile:
     config.write(configfile)
