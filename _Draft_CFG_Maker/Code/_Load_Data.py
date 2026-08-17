@@ -15,38 +15,47 @@ import json
                                                                             
 #_ Load Data _#
 #  Load Beast data for specific year(s), blank or all for all data
-def load_beast(years = '', defunct_colleges = True):
+def load_beast(years = '', defunct_colleges = True, site = 'b'):
     if years == '' or years.lower() == 'all':
         years = DRAFT_FULL_DATA
+
+    site = site[0].lower()
     
     # Importing Combine stats
-    if isinstance(years, int):
-        beast_Combine = pd.read_excel(f'C:/Users/pensh/Desktop/VSCode/DataBase/Data/Draft/Beast{years}.xlsx', sheet_name = 'Combine')
-        beast_Combine['Year'] = years
-    else:
-        beast_Combine = []
-        for year in years:
-            temp = pd.read_excel(f'C:/Users/pensh/Desktop/VSCode/DataBase/Data/Draft/Beast{year}.xlsx', sheet_name = 'Combine')
-            temp['Year'] = year
-            beast_Combine.append(temp)
-        beast_Combine = pd.concat(beast_Combine)
-        beast_Combine.reset_index(inplace = True)
+    if site == 'c' or site == 'b':
+        if isinstance(years, int):
+            beast_Combine = pd.read_excel(f'C:/Users/pensh/Desktop/VSCode/DataBase/Data/Draft/Beast{years}.xlsx', sheet_name = 'Combine')
+            beast_Combine['Year'] = years
+        else:
+            beast_Combine = []
+            for year in years:
+                temp = pd.read_excel(f'C:/Users/pensh/Desktop/VSCode/DataBase/Data/Draft/Beast{year}.xlsx', sheet_name = 'Combine')
+                temp['Year'] = year
+                beast_Combine.append(temp)
+            beast_Combine = pd.concat(beast_Combine)
+            beast_Combine.reset_index(inplace = True)
 
     # Importing ProDay stats
-    if isinstance(years, int):
-        beast_ProDay = pd.read_excel(f'C:/Users/pensh/Desktop/VSCode/DataBase/Data/Draft/Beast{years}.xlsx', sheet_name = 'ProDay')
-        beast_ProDay['Year'] = years
-    else:
-        beast_ProDay = []
-        for year in years:
-            temp = pd.read_excel(f'C:/Users/pensh/Desktop/VSCode/DataBase/Data/Draft/Beast{year}.xlsx', sheet_name = 'ProDay')
-            temp['Year'] = year
-            beast_ProDay.append(temp)
-        beast_ProDay = pd.concat(beast_ProDay)
-        beast_ProDay.reset_index(inplace = True)
+    if site == 'p' or site == 'b':
+        if isinstance(years, int):
+            beast_ProDay = pd.read_excel(f'C:/Users/pensh/Desktop/VSCode/DataBase/Data/Draft/Beast{years}.xlsx', sheet_name = 'ProDay')
+            beast_ProDay['Year'] = years
+        else:
+            beast_ProDay = []
+            for year in years:
+                temp = pd.read_excel(f'C:/Users/pensh/Desktop/VSCode/DataBase/Data/Draft/Beast{year}.xlsx', sheet_name = 'ProDay')
+                temp['Year'] = year
+                beast_ProDay.append(temp)
+            beast_ProDay = pd.concat(beast_ProDay)
+            beast_ProDay.reset_index(inplace = True)
 
     # Merge combine and proday, prioritizing combine
-    beast = merge_and_remove_x_y_cols(pd.merge(beast_Combine, beast_ProDay, on = ['RK', 'Name', 'POS', 'SCHOOL', 'Year']).replace('DNP', np.nan))
+    if site == 'b':
+        beast = merge_and_remove_x_y_cols(pd.merge(beast_Combine, beast_ProDay, on = ['RK', 'Name', 'POS', 'SCHOOL', 'Year']).replace('DNP', np.nan))
+    elif site == 'c':
+        beast = beast_Combine
+    elif site == 'p':
+        beast = beast_ProDay
 
     # Remove defunct colleges is needed
     if not defunct_colleges:

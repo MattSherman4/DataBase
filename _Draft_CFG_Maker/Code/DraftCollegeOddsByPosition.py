@@ -12,6 +12,7 @@ history_draft = history_draft.dropna(subset = ['College'])
 for position in history_draft['POS'].unique():
     # Get positional draft frequencies
     history_draft_pos = history_draft[history_draft['POS'] == position]
+    print(history_draft_pos)
     pos_freq = add_missing_divisions((history_draft_pos['College'].value_counts(normalize = True)).to_dict())
 
     # Get top rounds frequencies. Use Conf instead of Div to narrow the field more in early rounds
@@ -64,5 +65,5 @@ for position in history_draft['POS'].unique():
                                 "bot_freq" : bot_freq,
                                 "FA_freq" : FA_freq,
                                 "RMC_freq" : RMC_freq}
-with open("C:/Users/pensh/Desktop/VSCode/DataBase/_Draft_CFG_Maker/Data/CollegeOddsByPosition.cfg", "w+", encoding = "utf-8") as configfile:
+with open("C:/Users/pensh/Desktop/VSCode/DataBase/_Draft_CFG_Maker/Data/DraftCollegeOddsByPosition.cfg", "w+", encoding = "utf-8") as configfile:
     config.write(configfile)
