@@ -21,7 +21,7 @@ Upper.remove('Jr.')
 Upper.remove('Sr.')
 
 # Currently available positions. Could be changed with storylines later on
-current_positions = ['QB', 'HB', 'WR', 'TE', 'OT', 'OG', 'C', 'EDGE', 'DT', 'MLB', 'CB', 'S', 'K', 'P', 'LS']
+# current_positions = ['QB', 'HB', 'WR', 'TE', 'OT', 'OG', 'C', 'EDGE', 'DT', 'MLB', 'CB', 'S', 'K', 'P', 'LS']
 
 # Converts position abbreviations to full names
 pos_abr_to_full = {'QB' : 'Quarterback', 'HB' : 'Runningback',

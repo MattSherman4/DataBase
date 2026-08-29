@@ -1,14 +1,37 @@
-from _Load_Data import *
-from _Load_Variables import *
+import _Load_Data as LoadData
+import _Load_Variables as LoadVars
 import configparser
 import heapq
 from operator import itemgetter
 
 config = configparser.ConfigParser()
-history_draft = load_draft_all()
-history_draft = history_draft[history_draft['Year'] >= PASSING_ERA]
+history_draft = LoadData.load_draft_all()
+history_draft = history_draft[history_draft['Year'] >= LoadVars.PASSING_ERA]
 history_draft = history_draft.dropna(subset = ['College'])
+beast = LoadData.load_beast()
+beast = beast.dropna(subset = ['College'])
 
+#! Below is general draft data: !#
+# Get the historical draft rankings by position
+grade_count_total = beast['Grade'].value_counts().to_dict()
+grade_count_pos = {}
+FA_count_pos = {}
+RMC_count_pos = {}
+total_count_pos = {}
+for pos in beast['POS'].unique():
+    temp = beast[beast['POS'] == pos].copy()
+    grade_count_pos[pos] = temp[(temp['Grade'] != 'FA') & (temp['Grade'] != 'RMC')]['Grade'].count()
+    FA_count_pos[pos] = temp[temp['Grade'] == 'FA']['Grade'].count()
+    RMC_count_pos[pos] = temp[temp['Grade'] == 'RMC']['Grade'].count()
+    total_count_pos[pos] = temp['Grade'].count()
+# Data to write into the config
+config["TotalCount"] = {"TotalGraded" : grade_count_pos,
+                            "TotalFA" : FA_count_pos,
+                            "TotalRMC" : RMC_count_pos,
+                            "Total" : total_count_pos}
+
+
+#! Below is the college odds by position: !#
 for position in history_draft['POS'].unique():
     # Get positional draft frequencies
     history_draft_pos = history_draft[history_draft['POS'] == position]
@@ -59,11 +82,12 @@ for position in history_draft['POS'].unique():
     top_10 = weights_to_one_dict(dict(heapq.nlargest(10, pos_freq.items(), key = itemgetter(1))))
 
     # Data to write into the config
+    position = "CollegeOdds" + position
     config[position] = {"top_10" : top_10,
                                 "top_freq" : top_freq,
                                 "mid_freq" : mid_freq,
                                 "bot_freq" : bot_freq,
                                 "FA_freq" : FA_freq,
                                 "RMC_freq" : RMC_freq}
-with open("C:/Users/pensh/Desktop/VSCode/DataBase/_Draft_CFG_Maker/Data/DraftCollegeOddsByPosition.cfg", "w+", encoding = "utf-8") as configfile:
+with open("C:/Users/pensh/Desktop/VSCode/DataBase/_Draft_CFG_Maker/Data/DraftGeneral.cfg", "w+", encoding = "utf-8") as configfile:
     config.write(configfile)
