@@ -10,6 +10,7 @@ DEFAULT_DIV = 'FBS'
 DEFAUL_CONF = 'SEC'
 POWER_CONF = {'SEC' : 0.25, 'Big Ten' : 0.25, 'ACC' : 0.25, 'Big 12' : 0.25}
 POWER_DIV = {'FBS' : 0.90, 'FCS' : 0.09, 'DII' : 0.01}
+MAIN_POSITIONS = ['QB', 'HB', 'WR', 'TE', 'OT', 'OG', 'C', 'EDGE', 'DT', 'MLB', 'CB', 'S', 'K', 'P', 'LS']
 
 # Naming conventions
 generational_suffixes = ['Jr.', 'Sr.', 'I', 'Ii', 'Iii', 'Iv', 'V', 'Vi', 'Vii', 'Viii', 'Ix', 'X']
