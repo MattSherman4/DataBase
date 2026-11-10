@@ -9,7 +9,11 @@ history_draft = LoadData.load_draft_all()
 history_draft = history_draft[history_draft['Year'] >= LoadVars.PASSING_ERA]
 history_draft = history_draft.dropna(subset = ['College'])
 beast = LoadData.load_beast()
+beast_combine = LoadData.load_beast(site = 'c')
+beast_proday = LoadData.load_beast(site = 'p')
 beast = beast.dropna(subset = ['College'])
+beast_combine = beast_combine.dropna(subset = ['College'])
+beast_proday = beast_proday.dropna(subset = ['College'])
 
 config['General'] = {'Rounds' : 7,
     'Order' : 'Worst First', #^ Worst First (traditional), Best First, Random 
@@ -34,6 +38,8 @@ config['General'] = {'Rounds' : 7,
 for position in LoadVars.MAIN_POSITIONS:
     # Get draft totals by position
     beast_pos = beast[beast['POS'] == position].copy()
+    beast_combine_pos = beast_combine[beast_combine['POS'] == position].copy()
+    beast_proday_pos = beast_proday[beast_proday['POS'] == position].copy()
     grade_count_pos = beast_pos[(beast_pos['Grade'] != 'FA') & (beast_pos['Grade'] != 'RMC')]['Grade'].count()
     FA_count_pos = beast_pos[beast_pos['Grade'] == 'FA']['Grade'].count()
     RMC_count_pos = beast_pos[beast_pos['Grade'] == 'RMC']['Grade'].count()
@@ -50,6 +56,10 @@ for position in LoadVars.MAIN_POSITIONS:
         top_freq = LoadData.weights_to_one_dict(top_freq, max(top_freq, key = top_freq.get))
     else:
         top_freq = LoadVars.POWER_CONF
+
+    print(beast_pos.columns)
+    import sys
+    sys.exit()
 
     # Get Middle rounds frequencies
     history_draft_data_mid = history_draft_pos[history_draft_pos['Rnd'] > LoadVars.draft_grades_round_cutoff['Top']]
